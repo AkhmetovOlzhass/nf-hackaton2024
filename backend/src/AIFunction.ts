@@ -27,7 +27,6 @@ async function AIFunction(link, nameOfList) {
             return
         }
     })
-    // const promtData = await generateFullText(oldData);
     
     // await saveDataToJsonFile(promtData)
 
