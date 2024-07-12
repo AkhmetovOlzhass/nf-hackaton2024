@@ -28,7 +28,7 @@ const options = {
 const startOptions = {
     reply_markup: {
         keyboard: [
-            [{ text: '/review' }, { text: '/checkgit' }]
+            [ { text: '/review' }, { text: '/checkgit' }]
         ],
         resize_keyboard: true,
         one_time_keyboard: true
@@ -65,20 +65,16 @@ function startBot() {
             try {
                 const result = await checkRepoForPlagiarism(text, chatId);
                 if(!result){
-                    bot.sendMessage(chatId, `Результат проверки: ${result!.mostSimilarRepo}`).then(() => {
-                        process.exit(0);
-                    });
+                    bot.sendMessage(chatId, `Результат проверки: ${result!.mostSimilarRepo}`);
                 } else{
-                    bot.sendMessage(chatId, `Результат проверки: он чист`).then(() => {
-                        process.exit(0);
-                    });
+                    bot.sendMessage(chatId, `Результат проверки: он чист`);
                 }
                 
 
             } catch (error) {
-                bot.sendMessage(chatId, `Ошибка при проверке: ${error}`).then(() => {
-                    process.exit(0);
-                });;
+                bot.sendMessage(chatId, `Ошибка при проверке `);
+                console.log("Error");
+                
             }
             delete userStates[chatId].step; // Завершаем сессию после получения результатов
             return;
@@ -178,9 +174,7 @@ async function continueProcessing(oldData, startIndex, chatId, sheetName) {
                 i--;
             }
             if (i == oldData.length-1) {
-                bot.sendMessage(chatId, "Обработка всех данных завершена.").then(() => {
-                    process.exit(0); // Закрывает сервер после отправки последнего сообщения
-                });
+                bot.sendMessage(chatId, "Обработка всех данных завершена.");
             }
         }
 
