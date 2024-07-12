@@ -5,6 +5,7 @@ import { generateFullText } from './promts';
 import { readSheetData, updateSheetData } from './googleAuth';
 import { extractSpreadsheetId } from './excractId';
 import { preparedData } from './promts';
+import { checkRepoForPlagiarism } from './plagiat-checker-second';
 
 dotenv.config();
 const token = process.env.TG as string;
@@ -24,6 +25,16 @@ const options = {
     }
 };
 
+const startOptions = {
+    reply_markup: {
+        keyboard: [
+            [{ text: '/review' }, { text: '/checkgit' }]
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true
+    }
+};
+
 export const bot = new TelegramBot(token, { polling: true });
 
 function startBot() {
@@ -31,17 +42,53 @@ function startBot() {
         const chatId = msg.chat.id;
         const text = msg.text;
 
-        if (!userStates[chatId]) {
-            userStates[chatId] = { step: "waitingForLink" };
+        if (text === '/start') {
+            bot.sendMessage(chatId, "Выберите опцию:", startOptions);
+            return;
         }
 
-        if (userStates[chatId].awaitingFunctionInput) {
+        if (text === '/review') {
+            bot.sendMessage(chatId, "Введите ссылку на Google Spreadsheet:");
+            userStates[chatId] = { step: "waitingForLink" };
+            return;
+        }
+
+        if (text === '/checkgit') {
+            bot.sendMessage(chatId, "Введите ссылку на github репозиторий который хотите проверить");
+            userStates[chatId] = { step: "waitingForGithubLink" };
+            return;
+        }
+
+        if (userStates[chatId]?.step === "waitingForGithubLink") {
+            userStates[chatId].githubLink = text;
+            bot.sendMessage(chatId, "Проверка репозитория...");
+            try {
+                const result = await checkRepoForPlagiarism(text, chatId);
+                if(!result){
+                    bot.sendMessage(chatId, `Результат проверки: ${result!.mostSimilarRepo}`).then(() => {
+                        process.exit(0);
+                    });
+                } else{
+                    bot.sendMessage(chatId, `Результат проверки: он чист`).then(() => {
+                        process.exit(0);
+                    });
+                }
+                
+
+            } catch (error) {
+                bot.sendMessage(chatId, `Ошибка при проверке: ${error}`).then(() => {
+                    process.exit(0);
+                });;
+            }
+            delete userStates[chatId].step; // Завершаем сессию после получения результатов
+            return;
+        }
+
+        if (userStates[chatId] && userStates[chatId].awaitingFunctionInput) {
             if (userStates[chatId].stepAwaiting === "explain") {
                 const oldData = readJsonFile('output.json');
                 oldData[userStates[chatId].rowIndex].push(userStates[chatId].answer);
                 oldData[userStates[chatId].rowIndex].push(text);
-                preparedData.push(oldData[userStates[chatId].rowIndex])
-                
                 await saveDataToJsonFile(oldData);
                 await updateSheetData(extractSpreadsheetId(userStates[chatId].link), userStates[chatId].sheetName, oldData);
                 delete userStates[chatId].awaitingFunctionInput;

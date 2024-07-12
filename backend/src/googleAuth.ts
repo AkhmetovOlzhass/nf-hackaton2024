@@ -11,7 +11,7 @@ async function authenticate() {
         return googleSheets;
     } catch (error) {
         console.error('Ошибка при аутентификации:', error);
-        throw error;  // Перебрасываем ошибку дальше, чтобы она могла быть обработана на более высоком уровне.
+        throw error; 
     }
 }
 
@@ -50,7 +50,7 @@ async function updateSheetData(spreadsheetId, range, values) {
         console.log('Данные успешно обновлены:', response.data);
     } catch (err) {
         console.error('Ошибка при обновлении данных:', err);
-        
+
     }
 }
 
