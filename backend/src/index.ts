@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import globalRouter from './routes/global-router';
-import { AIFunction } from './AIFunction';
 import { startBot } from './telegramBot';
 
 
@@ -23,8 +22,6 @@ app.use(cors({
 }));
 
 startBot()
-
-// AIFunction('https://docs.google.com/spreadsheets/d/1oNjuXTcnX-GW61f7e3XteA_7lZU6uecle5gEemdaUA4/edit?gid=910644525#gid=910644525', 'Sheet3')
 
 app.use(express.json());
 app.use('/api/', globalRouter);

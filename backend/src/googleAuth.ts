@@ -27,11 +27,13 @@ async function readSheetData(spreadsheetId, range) {
         return response.data.values;
     } catch (error) {
         console.error('Ошибка при чтении данных:', error);
-        throw error;
+        return null
     }
 }
 
 async function updateSheetData(spreadsheetId, range, values) {
+    
+    
     const googleSheets = await authenticate();
 
     const request = {
@@ -48,6 +50,7 @@ async function updateSheetData(spreadsheetId, range, values) {
         console.log('Данные успешно обновлены:', response.data);
     } catch (err) {
         console.error('Ошибка при обновлении данных:', err);
+        
     }
 }
 

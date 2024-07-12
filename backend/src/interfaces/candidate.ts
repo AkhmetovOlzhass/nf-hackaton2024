@@ -23,6 +23,7 @@ interface FormQuestions {
 
 enum ProgrammingSkillLevel {
     NoExperience = "No experience",
+    SelfTaught = "Self-taught",
     ITStudent = "IT student",
     CompetitiveProgrammer = "Competitive programmer",
     ProfessionalDeveloper = "Professional developer",
