@@ -19,7 +19,7 @@ AI Recruiter Bot is a **Telegram bot** that automates candidate screening using 
 ✅ **Managed via Telegram bot** for easy interaction  
 
 ## 🔗 Useful Links
-**📜 GitHub API Docs**: docs.github.com/rest
-**📜 Telegram Bot API Docs**: core.telegram.org/bots/api
+**📜 GitHub API Docs**: docs.github.com/rest  
+**📜 Telegram Bot API Docs**: core.telegram.org/bots/api  
 
 🚀 Developed during a hackathon – project can be expanded further!
